@@ -124,9 +124,9 @@ script = ExtResource("1_g2els")
 position = Vector2(-12, -57.5)
 scale = Vector2(1.33333, 1.35)
 sprite_frames = SubResource("SpriteFrames_tuyoq")
-animation = &"idle"
+animation = &"dribble"
 autoplay = "idle"
-frame_progress = 0.198229
+frame_progress = 0.166616
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(-14.25, -14.5)

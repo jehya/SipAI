@@ -491,20 +491,22 @@ limit_top = -177
 limit_right = 577
 limit_bottom = 120
 
-[node name="horizontal" type="StaticBody2D" parent="."]
+[node name="Boundaries" type="Node" parent="."]
+
+[node name="horizontal" type="StaticBody2D" parent="Boundaries"]
 position = Vector2(131, 107)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="horizontal"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Boundaries/horizontal"]
 shape = SubResource("WorldBoundaryShape2D_uwrxv")
 
-[node name="leftlimit" type="StaticBody2D" parent="."]
+[node name="leftlimit" type="StaticBody2D" parent="Boundaries"]
 position = Vector2(-24, -3)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="leftlimit"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Boundaries/leftlimit"]
 shape = SubResource("WorldBoundaryShape2D_yqjtg")
 
-[node name="rightlimit" type="StaticBody2D" parent="."]
+[node name="rightlimit" type="StaticBody2D" parent="Boundaries"]
 position = Vector2(576, -1)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="rightlimit"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Boundaries/rightlimit"]
 shape = SubResource("WorldBoundaryShape2D_lnu2h")
