@@ -1,25 +1,9 @@
-[gd_scene load_steps=20 format=3 uid="uid://c7hs8oh4x4uxb"]
+[gd_scene load_steps=18 format=3 uid="uid://c7hs8oh4x4uxb"]
 
 [ext_resource type="Script" uid="uid://05j62coo16xg" path="res://scripts/player.gd" id="1_g2els"]
 [ext_resource type="Texture2D" uid="uid://dtba1ufqkeloi" path="res://assets/DRIBBLE.png" id="2_dqkch"]
 [ext_resource type="Texture2D" uid="uid://jkd66c1qyhik" path="res://assets/IDLE.png" id="2_g2els"]
 [ext_resource type="Texture2D" uid="uid://07a588jhe5px" path="res://assets/RUN.png" id="4_qlg0r"]
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_tuyoq"]
-atlas = ExtResource("2_dqkch")
-region = Rect2(0, 0, 60, 100)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_fjrip"]
-atlas = ExtResource("2_dqkch")
-region = Rect2(60, 0, 60, 100)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_smehm"]
-atlas = ExtResource("2_dqkch")
-region = Rect2(120, 0, 60, 100)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_ur7pv"]
-atlas = ExtResource("2_dqkch")
-region = Rect2(180, 0, 60, 100)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_qhqgy"]
 atlas = ExtResource("2_g2els")
@@ -32,6 +16,14 @@ region = Rect2(60, 0, 60, 100)
 [sub_resource type="AtlasTexture" id="AtlasTexture_qlg0r"]
 atlas = ExtResource("2_g2els")
 region = Rect2(120, 0, 60, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tuyoq"]
+atlas = ExtResource("2_dqkch")
+region = Rect2(120, 0, 60, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fjrip"]
+atlas = ExtResource("2_dqkch")
+region = Rect2(180, 0, 60, 100)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_y4r1p"]
 atlas = ExtResource("4_qlg0r")
@@ -61,23 +53,6 @@ region = Rect2(300, 0, 60, 100)
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_tuyoq")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_fjrip")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_smehm")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_ur7pv")
-}],
-"loop": true,
-"name": &"dribble",
-"speed": 5.0
-}, {
-"frames": [{
-"duration": 1.0,
 "texture": SubResource("AtlasTexture_qhqgy")
 }, {
 "duration": 1.0,
@@ -88,6 +63,17 @@ animations = [{
 }],
 "loop": true,
 "name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tuyoq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fjrip")
+}],
+"loop": true,
+"name": &"kick",
 "speed": 5.0
 }, {
 "frames": [{
@@ -124,9 +110,9 @@ script = ExtResource("1_g2els")
 position = Vector2(-12, -57.5)
 scale = Vector2(1.33333, 1.35)
 sprite_frames = SubResource("SpriteFrames_tuyoq")
-animation = &"idle"
+animation = &"kick"
 autoplay = "idle"
-frame_progress = 0.185519
+frame_progress = 0.35742
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(-14.25, -14.5)
