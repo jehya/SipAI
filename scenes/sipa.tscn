@@ -1,0 +1,30 @@
+[gd_scene load_steps=4 format=3 uid="uid://cweq2e8cmrddl"]
+
+[ext_resource type="Texture2D" uid="uid://bv14s5yxjjkn8" path="res://assets/SIPA OBJECT.png" id="1_misjo"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_jsgah"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_misjo")
+}],
+"loop": true,
+"name": &"pitsa",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_deck0"]
+radius = 5.0
+height = 20.0
+
+[node name="Sipa" type="RigidBody2D"]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(-2.125, -13.5)
+scale = Vector2(0.272222, 0.233333)
+sprite_frames = SubResource("SpriteFrames_jsgah")
+animation = &"pitsa"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-2, -13)
+shape = SubResource("CapsuleShape2D_deck0")

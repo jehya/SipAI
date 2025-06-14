@@ -1,7 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://b1mygb0vqyh2a"]
+[gd_scene load_steps=9 format=3 uid="uid://b1mygb0vqyh2a"]
 
 [ext_resource type="PackedScene" uid="uid://c7hs8oh4x4uxb" path="res://scenes/player.tscn" id="1_uwrxv"]
 [ext_resource type="Texture2D" uid="uid://daw8a8sjcvy1h" path="res://assets/bg_game.png" id="1_yqjtg"]
+[ext_resource type="PackedScene" uid="uid://cweq2e8cmrddl" path="res://scenes/sipa.tscn" id="3_lnu2h"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_lnu2h"]
 texture = ExtResource("1_yqjtg")
@@ -490,6 +491,9 @@ limit_left = -24
 limit_top = -177
 limit_right = 577
 limit_bottom = 120
+
+[node name="Sipa" parent="." instance=ExtResource("3_lnu2h")]
+position = Vector2(26, -171)
 
 [node name="Boundaries" type="Node" parent="."]
 
