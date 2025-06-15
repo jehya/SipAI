@@ -1,6 +1,6 @@
 extends CharacterBody2D
 
-const SPEED = 300.0
+const SPEED = 200.0
 const JUMP_VELOCITY = -400.0
 
 var is_kicking = false
@@ -20,7 +20,7 @@ func _physics_process(delta: float) -> void:
 	if not is_on_floor():
 		velocity += get_gravity() * delta
 
-	if Input.is_action_just_pressed("dribble") and not is_kicking:
+	if (Input.is_action_just_pressed("kick_high") or Input.is_action_just_pressed("kick_medium") or Input.is_action_just_pressed("kick_short"))and not is_kicking:
 		is_kicking = true
 		kick_timer = KICK_DURATION
 		enable_kick_collision()
@@ -46,7 +46,7 @@ func _physics_process(delta: float) -> void:
 		else:
 			animated_sprite_2d.play("run")
 		
-		if direction:
+		if direction and not is_kicking:
 			velocity.x = direction * SPEED
 		else:
 			velocity.x = move_toward(velocity.x, 0, SPEED)

@@ -3,7 +3,6 @@ extends RigidBody2D
 var touching_body: Node = null
 
 @onready var area_2d: Area2D = $Area2D
-@onready var power_meter: Control = $"../CanvasLayer/PowerMeter"
 
 func _ready():
 	area_2d.body_entered.connect(_on_body_entered)
@@ -29,10 +28,15 @@ func _physics_process(delta):
 		var power_ratio = 0.5  # default if no meter
 
 		# Use power_meter if player, otherwise default or AI's version later
-		if touching_body.is_in_group("player") and power_meter:
-			power_ratio = power_meter.get_power_ratio()
+		if touching_body.is_in_group("player"):
+			if Input.is_action_just_pressed("kick_short"):
+				power_ratio = 0.3  # Low force
+			elif Input.is_action_just_pressed("kick_medium"):
+				power_ratio = 0.6  # Medium force
+			elif Input.is_action_just_pressed("kick_high"):
+				power_ratio = 0.85  # High force
 
-		var force = lerp(300, 800, power_ratio)
+		var force = lerp(200, 900, power_ratio)
 
 		var horizontal = 0
 		if Input.is_action_pressed("move_right"):

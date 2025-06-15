@@ -19,7 +19,7 @@ radius = 5.0
 height = 20.0
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_misjo"]
-radius = 5.0
+radius = 4.99999
 height = 20.0
 
 [node name="Sipa" type="RigidBody2D"]

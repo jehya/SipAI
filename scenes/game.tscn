@@ -1,9 +1,8 @@
-[gd_scene load_steps=13 format=4 uid="uid://b1mygb0vqyh2a"]
+[gd_scene load_steps=9 format=4 uid="uid://b1mygb0vqyh2a"]
 
 [ext_resource type="PackedScene" uid="uid://c7hs8oh4x4uxb" path="res://scenes/player.tscn" id="1_uwrxv"]
 [ext_resource type="Texture2D" uid="uid://daw8a8sjcvy1h" path="res://assets/bg_game.png" id="1_yqjtg"]
 [ext_resource type="PackedScene" uid="uid://cweq2e8cmrddl" path="res://scenes/sipa.tscn" id="3_lnu2h"]
-[ext_resource type="Script" uid="uid://cold64vnir7lf" path="res://scripts/power_meter.gd" id="4_lbhrr"]
 [ext_resource type="PackedScene" uid="uid://cjsfchw24vwqg" path="res://scenes/ai.tscn" id="5_iywne"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_lnu2h"]
@@ -470,24 +469,6 @@ normal = Vector2(1, 0)
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_lnu2h"]
 normal = Vector2(-1, 0)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lbhrr"]
-bg_color = Color(0, 0, 0, 0)
-border_width_left = 5
-border_width_top = 5
-border_width_right = 5
-border_width_bottom = 5
-border_color = Color(0, 0, 0, 1)
-shadow_color = Color(0.136826, 0.136826, 0.136826, 0.6)
-shadow_size = 2
-
-[sub_resource type="Gradient" id="Gradient_lbhrr"]
-offsets = PackedFloat32Array(0, 0.5, 1)
-colors = PackedColorArray(0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 0, 1)
-metadata/_snap_enabled = true
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_iywne"]
-gradient = SubResource("Gradient_lbhrr")
-
 [node name="Game" type="Node2D"]
 
 [node name="TileMap" type="TileMap" parent="."]
@@ -517,7 +498,7 @@ position = Vector2(481, 52)
 collision_mask = 8
 
 [node name="Sipa" parent="." instance=ExtResource("3_lnu2h")]
-position = Vector2(369, -89)
+position = Vector2(117, -139)
 collision_mask = 8
 
 [node name="Boundaries" type="Node" parent="."]
@@ -544,38 +525,3 @@ position = Vector2(576, -1)
 shape = SubResource("WorldBoundaryShape2D_lnu2h")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
-
-[node name="PowerMeter" type="Control" parent="CanvasLayer"]
-layout_mode = 3
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -20.0
-offset_top = 30.0
-offset_right = 20.0
-offset_bottom = 70.0
-grow_horizontal = 2
-size_flags_stretch_ratio = 0.0
-script = ExtResource("4_lbhrr")
-
-[node name="Panel" type="Panel" parent="CanvasLayer/PowerMeter"]
-layout_mode = 0
-offset_right = 110.0
-offset_bottom = 50.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_lbhrr")
-
-[node name="GradientBar" type="TextureRect" parent="CanvasLayer/PowerMeter/Panel"]
-layout_mode = 0
-offset_left = 5.0
-offset_top = 5.0
-offset_right = 105.0
-offset_bottom = 45.0
-texture = SubResource("GradientTexture2D_iywne")
-expand_mode = 1
-
-[node name="MarkerLine" type="ColorRect" parent="CanvasLayer/PowerMeter"]
-layout_mode = 0
-offset_left = 5.0
-offset_top = 5.0
-offset_right = 8.0
-offset_bottom = 45.0
