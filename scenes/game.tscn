@@ -513,11 +513,11 @@ limit_right = 577
 limit_bottom = 120
 
 [node name="AI" parent="." instance=ExtResource("5_iywne")]
-position = Vector2(481, 48)
+position = Vector2(481, 52)
 collision_mask = 8
 
 [node name="Sipa" parent="." instance=ExtResource("3_lnu2h")]
-position = Vector2(119, -140)
+position = Vector2(369, -89)
 collision_mask = 8
 
 [node name="Boundaries" type="Node" parent="."]

@@ -9,6 +9,9 @@ func _ready():
 	area_2d.body_entered.connect(_on_body_entered)
 	area_2d.body_exited.connect(_on_body_exited)
 
+	start_round("player")  # or "ai"
+
+
 func _on_body_entered(body):
 	if body.is_in_group("player") or body.is_in_group("enemy"):
 		touching_body = body
