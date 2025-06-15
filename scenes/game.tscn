@@ -514,3 +514,5 @@ position = Vector2(576, -1)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Boundaries/rightlimit"]
 shape = SubResource("WorldBoundaryShape2D_lnu2h")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]

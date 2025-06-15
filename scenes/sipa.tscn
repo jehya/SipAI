@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://cweq2e8cmrddl"]
 
-[ext_resource type="Script" uid="uid://brq4csoj2efu7" path="res://scenes/sipa.gd" id="1_jsgah"]
+[ext_resource type="Script" uid="uid://brq4csoj2efu7" path="res://scripts/sipa.gd" id="1_jsgah"]
 [ext_resource type="Texture2D" uid="uid://bv14s5yxjjkn8" path="res://assets/SIPA OBJECT.png" id="1_misjo"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_jsgah"]
