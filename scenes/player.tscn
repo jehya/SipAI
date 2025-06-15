@@ -103,7 +103,7 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_tuyoq"]
 size = Vector2(32.5, 37)
 
-[node name="Player" type="CharacterBody2D"]
+[node name="Player" type="CharacterBody2D" groups=["player"]]
 script = ExtResource("1_g2els")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
@@ -112,7 +112,7 @@ scale = Vector2(1.33333, 1.35)
 sprite_frames = SubResource("SpriteFrames_tuyoq")
 animation = &"kick"
 autoplay = "idle"
-frame_progress = 0.978
+frame_progress = 0.737913
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(-14.25, -14.5)

@@ -493,7 +493,7 @@ limit_right = 577
 limit_bottom = 120
 
 [node name="Sipa" parent="." instance=ExtResource("3_lnu2h")]
-position = Vector2(26, -171)
+position = Vector2(115, -163)
 
 [node name="Boundaries" type="Node" parent="."]
 
