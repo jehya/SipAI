@@ -23,6 +23,8 @@ radius = 5.0
 height = 20.0
 
 [node name="Sipa" type="RigidBody2D"]
+collision_layer = 4
+collision_mask = 11
 script = ExtResource("1_jsgah")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
@@ -32,6 +34,8 @@ sprite_frames = SubResource("SpriteFrames_jsgah")
 animation = &"pitsa"
 
 [node name="Area2D" type="Area2D" parent="."]
+collision_layer = 4
+collision_mask = 11
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 position = Vector2(-2, -13)

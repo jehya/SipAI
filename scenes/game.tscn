@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=4 uid="uid://b1mygb0vqyh2a"]
+[gd_scene load_steps=13 format=4 uid="uid://b1mygb0vqyh2a"]
 
 [ext_resource type="PackedScene" uid="uid://c7hs8oh4x4uxb" path="res://scenes/player.tscn" id="1_uwrxv"]
 [ext_resource type="Texture2D" uid="uid://daw8a8sjcvy1h" path="res://assets/bg_game.png" id="1_yqjtg"]
@@ -464,8 +464,6 @@ texture_region_size = Vector2i(20, 20)
 tile_size = Vector2i(20, 20)
 sources/1 = SubResource("TileSetAtlasSource_lnu2h")
 
-[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_uwrxv"]
-
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_yqjtg"]
 normal = Vector2(1, 0)
 
@@ -515,19 +513,20 @@ limit_bottom = 120
 
 [node name="AI" parent="." instance=ExtResource("5_iywne")]
 position = Vector2(481, 48)
-collision_layer = 2
 
 [node name="Sipa" parent="." instance=ExtResource("3_lnu2h")]
-position = Vector2(117, -160)
-collision_mask = 7
+position = Vector2(119, -140)
 
 [node name="Boundaries" type="Node" parent="."]
 
 [node name="horizontal" type="StaticBody2D" parent="Boundaries"]
 position = Vector2(137, 108)
+disable_mode = 1
+collision_layer = 8
+collision_mask = 7
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Boundaries/horizontal"]
-shape = SubResource("WorldBoundaryShape2D_uwrxv")
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Boundaries/horizontal"]
+polygon = PackedVector2Array(-161, 0, 445, -1, 531, -2, 528, -317, -235, -316, -237, 1, -162, 0, -158, 32, -158, 62, -296, 61, -295, -373, 592, -375, 587, 62, -159, 62)
 
 [node name="leftlimit" type="StaticBody2D" parent="Boundaries"]
 position = Vector2(-24, -3)
