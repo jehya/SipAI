@@ -73,7 +73,8 @@ func end_turn(success: bool):
 
 	else:
 		# Only switch turn if juggling was successful
-		required_juggles += 1
+		if (current_turn == "AI"):
+			required_juggles += 1
 
 		#if current_turn == "Player":
 			#player_lives = 5
