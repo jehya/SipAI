@@ -614,10 +614,10 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="AI_Panel" type="Panel" parent="CanvasLayer"]
-offset_left = 788.0
-offset_top = 17.0
-offset_right = 1082.0
-offset_bottom = 84.0
+offset_left = 789.0
+offset_top = 21.0
+offset_right = 1083.0
+offset_bottom = 88.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_iywne")
 script = ExtResource("5_u5sy4")
 heart_full = ExtResource("6_gee14")
