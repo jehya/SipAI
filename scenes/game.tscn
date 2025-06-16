@@ -566,7 +566,7 @@ shape = SubResource("RectangleShape2D_iywne")
 [node name="Panel" type="Panel" parent="CanvasLayer"]
 offset_left = 19.0
 offset_top = 18.0
-offset_right = 200.0
+offset_right = 314.0
 offset_bottom = 85.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_iywne")
 script = ExtResource("5_u5sy4")
@@ -575,10 +575,10 @@ heart_empty = ExtResource("7_0tnpc")
 
 [node name="Panel" type="Panel" parent="CanvasLayer/Panel"]
 layout_mode = 0
-offset_left = 13.0
-offset_top = 74.0
-offset_right = 164.0
-offset_bottom = 105.0
+offset_left = 68.0
+offset_top = 73.0
+offset_right = 219.0
+offset_bottom = 104.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_0tnpc")
 
 [node name="Label3" type="Label" parent="CanvasLayer/Panel/Panel"]
@@ -607,11 +607,17 @@ layout_mode = 2
 [node name="Heart3" type="TextureRect" parent="CanvasLayer/Panel/HBoxContainer"]
 layout_mode = 2
 
+[node name="Heart4" type="TextureRect" parent="CanvasLayer/Panel/HBoxContainer"]
+layout_mode = 2
+
+[node name="Heart5" type="TextureRect" parent="CanvasLayer/Panel/HBoxContainer"]
+layout_mode = 2
+
 [node name="AI_Panel" type="Panel" parent="CanvasLayer"]
-offset_left = 956.0
-offset_top = 15.0
-offset_right = 1136.0
-offset_bottom = 82.0
+offset_left = 788.0
+offset_top = 17.0
+offset_right = 1082.0
+offset_bottom = 84.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_iywne")
 script = ExtResource("5_u5sy4")
 heart_full = ExtResource("6_gee14")
@@ -619,10 +625,10 @@ heart_empty = ExtResource("7_0tnpc")
 
 [node name="Panel" type="Panel" parent="CanvasLayer/AI_Panel"]
 layout_mode = 0
-offset_left = 17.0
-offset_top = 75.0
-offset_right = 170.0
-offset_bottom = 105.0
+offset_left = 71.0
+offset_top = 73.0
+offset_right = 224.0
+offset_bottom = 103.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_gee14")
 
 [node name="Label" type="Label" parent="CanvasLayer/AI_Panel/Panel"]
@@ -649,6 +655,12 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="AI_Heart3" type="TextureRect" parent="CanvasLayer/AI_Panel/HBoxContainer"]
+layout_mode = 2
+
+[node name="AI_Heart4" type="TextureRect" parent="CanvasLayer/AI_Panel/HBoxContainer"]
+layout_mode = 2
+
+[node name="AI_Heart5" type="TextureRect" parent="CanvasLayer/AI_Panel/HBoxContainer"]
 layout_mode = 2
 
 [node name="TurnManager" type="Node" parent="."]

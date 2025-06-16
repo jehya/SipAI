@@ -2,7 +2,7 @@ extends Panel
 
 @export var heart_full: Texture
 @export var heart_empty: Texture
-@export var max_lives := 3
+@export var max_lives := 5
 
 var heart_images := []
 
@@ -11,7 +11,7 @@ var heart_images := []
 func _ready():
 	# Get all TextureRects inside HBoxContainer
 	heart_images = $HBoxContainer.get_children()
-	update_hearts(3)  # Example: start with 3 full lives
+	update_hearts(5)  # Example: start with 3 full lives
 
 func update_hearts(lives: int):
 	for i in range(heart_images.size()):
