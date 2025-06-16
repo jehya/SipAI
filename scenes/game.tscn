@@ -521,7 +521,7 @@ collision_layer = 8
 collision_mask = 7
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Boundaries/horizontal"]
-polygon = PackedVector2Array(-161, 0, 445, -1, 531, -2, 528, -317, -235, -316, -237, 1, -162, 0, -158, 32, -158, 62, -296, 61, -295, -373, 592, -375, 587, 62, -159, 62)
+polygon = PackedVector2Array(-161, 0, 445, -1, 445, 0, 448, -374, -163, -371, -163, -146, -163, -1, -162, 0, -158, 32, -158, 62, -296, 61, -295, -373, 592, -375, 587, 62, -159, 62)
 
 [node name="leftlimit" type="StaticBody2D" parent="Boundaries"]
 position = Vector2(-24, -3)
@@ -554,5 +554,11 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_iywne")
 
 [node name="TurnManager" type="Node" parent="."]
 script = ExtResource("5_p57ef")
+
+[node name="PlayerStart" type="Marker2D" parent="."]
+position = Vector2(113, -92)
+
+[node name="AIStart" type="Marker2D" parent="."]
+position = Vector2(458, -109)
 
 [connection signal="body_entered" from="Boundaries/GroundArea" to="Sipa" method="_on_ground_area_body_entered"]

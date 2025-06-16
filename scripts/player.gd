@@ -6,8 +6,17 @@ const JUMP_VELOCITY = -400.0
 var is_kicking = false
 var kick_timer = 0.0
 const KICK_DURATION = 0.3
+var initial_position: Vector2
 
-@onready var animated_sprite_2d: AnimatedSprite2D = $AnimatedSprite2D
+
+@onready var animated_sprite_2d: AnimatedSprite2D = $AnimatedSp
+
+func _ready():
+	initial_position = position
+
+func reset_position():
+	position = initial_position
+	velocity = Vector2.ZERO
 
 func enable_kick_collision():
 	collision_layer |= 8  # Add Layer 4th bit → Layer 3 (Sipa layer)
@@ -52,3 +61,7 @@ func _physics_process(delta: float) -> void:
 			velocity.x = move_toward(velocity.x, 0, SPEED)
 
 	move_and_slide()
+	
+func end_turn():
+	# Placeholder for now — no action needed yet
+	pass

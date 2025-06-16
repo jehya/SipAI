@@ -43,5 +43,5 @@ shape = SubResource("CapsuleShape2D_deck0")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(-2, -13)
-rotation = 3.13985
+rotation = 3.14159
 shape = SubResource("CapsuleShape2D_misjo")

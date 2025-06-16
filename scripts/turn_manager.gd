@@ -11,6 +11,7 @@ var ai_lives = 3
 
 func _ready():
 	start_turn()
+	
 
 func start_turn():
 	current_juggles = 0
@@ -38,25 +39,35 @@ func end_turn(success: bool):
 
 		check_game_over()
 
-		# ✅ Stop everything if the game is over
 		if player_lives <= 0 or ai_lives <= 0:
 			return  # Game over — do NOT continue
 
-		# Player/AI still has lives → retry same turn
+		var sipa = get_node("/root/Game/Sipa")
+		var player_node = get_node("/root/Game/Player")
+		var ai_node = get_node("/root/Game/AI")
+
+		player_node.reset_position()
+		ai_node.reset_position()
+		sipa.reset_position(current_turn.to_lower())  # retry same player
+
+		if current_turn == "Player":
+			player_node.end_turn()
+		else:
+			ai_node.end_turn()
+
+		# DO NOT switch turn — retry same player
 		start_turn()
 		return
 
 	else:
-		# Successful juggling: increase difficulty and switch turn
+		# Only switch turn if juggling was successful
 		required_juggles += 1
 
-		# Reset lives on success (optional)
 		if current_turn == "Player":
 			player_lives = 3
 		else:
 			ai_lives = 3
 
-		# Switch turn
 		current_turn = "AI" if current_turn == "Player" else "Player"
 
 	start_turn()

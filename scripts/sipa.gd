@@ -1,15 +1,46 @@
 extends RigidBody2D
 
 var touching_body: Node = null
+var initial_position_player: Vector2
+var initial_position_ai: Vector2
 
 @onready var area_2d: Area2D = $Area2D
 
 func _ready():
+	await get_tree().process_frame
 	area_2d.body_entered.connect(_on_body_entered)
 	area_2d.body_exited.connect(_on_body_exited)
 
-	start_round("player")  # or "ai"
+	var player_start = get_parent().get_node_or_null("PlayerStart")
+	var ai_start = get_parent().get_node_or_null("AIStart")
 
+	if player_start and ai_start:
+		var offset = Vector2(0, -60)  # adjust as needed
+		initial_position_player = player_start.global_position + offset
+		initial_position_ai = ai_start.global_position + offset
+	else:
+		push_error("PlayerStart or AIStart node not found!")
+
+	start_round("player")
+	
+#func set_initial_position(pos: Vector2):
+	#initial_position = pos
+
+
+func reset_position(who_starts: String):
+	print("Sipa reset called for:", who_starts)
+
+	var target_position = initial_position_player if who_starts == "player" else initial_position_ai
+	print("Resetting to:", target_position)
+
+	sleeping = true
+	linear_velocity = Vector2.ZERO
+	angular_velocity = 0
+
+	set_deferred("global_position", target_position)
+	set_deferred("sleeping", false)
+
+	start_round(who_starts)
 
 func _on_body_entered(body):
 	if body.is_in_group("player") or body.is_in_group("enemy"):
@@ -79,4 +110,11 @@ func start_round(who_starts: String):
 func _on_ground_area_body_entered(body: Node2D) -> void:
 	if body == self:
 		print("Sipa hit the ground!")
-		get_node("/root/Game/TurnManager").end_turn(false)
+		
+		var turn_manager = get_node("/root/Game/TurnManager")
+		var who_starts_next = "player" if turn_manager.is_player_turn() else "ai"
+		
+		turn_manager.end_turn(false)  # This should handle life deduction
+
+		# Add this after turn ends to restart the round correctly
+		reset_position(who_starts_next)
