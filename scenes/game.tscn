@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=4 uid="uid://b1mygb0vqyh2a"]
+[gd_scene load_steps=22 format=4 uid="uid://b1mygb0vqyh2a"]
 
 [ext_resource type="PackedScene" uid="uid://c7hs8oh4x4uxb" path="res://scenes/player.tscn" id="1_uwrxv"]
 [ext_resource type="Texture2D" uid="uid://daw8a8sjcvy1h" path="res://assets/bg_game.png" id="1_yqjtg"]
@@ -11,6 +11,7 @@
 [ext_resource type="FontFile" uid="uid://jywost35iltc" path="res://assets/fonts/dogicapixel.ttf" id="8_0tnpc"]
 [ext_resource type="Script" uid="uid://bcwso6n0wa5ju" path="res://scenes/juggle_counter_panel.gd" id="9_vtaks"]
 [ext_resource type="FontFile" uid="uid://cxnbavq6hj5l7" path="res://assets/fonts/dogicabold.ttf" id="10_kvpfn"]
+[ext_resource type="AudioStream" uid="uid://c13b862nuhf67" path="res://assets/music/Suburban Neighborhood (Sound Effect).mp3" id="12_dinhu"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_lnu2h"]
 texture = ExtResource("1_yqjtg")
@@ -751,5 +752,10 @@ position = Vector2(113, -92)
 
 [node name="AIStart" type="Marker2D" parent="."]
 position = Vector2(458, -109)
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("12_dinhu")
+autoplay = true
+bus = &"Music"
 
 [connection signal="body_entered" from="Boundaries/GroundArea" to="Sipa" method="_on_ground_area_body_entered"]
