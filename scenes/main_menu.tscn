@@ -1,8 +1,9 @@
-[gd_scene load_steps=9 format=3 uid="uid://bwll1amwy5hu3"]
+[gd_scene load_steps=10 format=3 uid="uid://bwll1amwy5hu3"]
 
 [ext_resource type="Texture2D" uid="uid://daw8a8sjcvy1h" path="res://assets/bg_game.png" id="1_7vrkn"]
 [ext_resource type="Script" uid="uid://cc12jv18x84mp" path="res://scripts/main_menu.gd" id="1_bqqt6"]
 [ext_resource type="FontFile" uid="uid://cxnbavq6hj5l7" path="res://assets/fonts/dogicabold.ttf" id="2_fu7sn"]
+[ext_resource type="AudioStream" uid="uid://cl3638cxdcnqn" path="res://assets/music/Growtopia OST - Naughty princess (old version).mp3" id="4_wu84c"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_jix8l"]
 texture = ExtResource("1_7vrkn")
@@ -126,6 +127,11 @@ theme_override_font_sizes/font_size = 80
 text = "SipAI"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="Music" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_wu84c")
+autoplay = true
+bus = &"Music"
 
 [connection signal="pressed" from="VBoxContainer/Button" to="." method="_on_start_pressed"]
 [connection signal="pressed" from="VBoxContainer/Button2" to="." method="_on_exit_pressed"]

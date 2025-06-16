@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://cl3638cxdcnqn"
+path="res://.godot/imported/Growtopia OST - Naughty princess (old version).mp3-708dc208808f4b6ae5158770be5f413d.mp3str"
+
+[deps]
+
+source_file="res://assets/music/Growtopia OST - Naughty princess (old version).mp3"
+dest_files=["res://.godot/imported/Growtopia OST - Naughty princess (old version).mp3-708dc208808f4b6ae5158770be5f413d.mp3str"]
+
+[params]
+
+loop=true
+loop_offset=0.0
+bpm=0.0
+beat_count=0
+bar_beats=4
