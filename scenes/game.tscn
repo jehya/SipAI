@@ -1,15 +1,16 @@
-[gd_scene load_steps=22 format=4 uid="uid://b1mygb0vqyh2a"]
+[gd_scene load_steps=32 format=4 uid="uid://b1mygb0vqyh2a"]
 
 [ext_resource type="PackedScene" uid="uid://c7hs8oh4x4uxb" path="res://scenes/player.tscn" id="1_uwrxv"]
 [ext_resource type="Texture2D" uid="uid://daw8a8sjcvy1h" path="res://assets/bg_game.png" id="1_yqjtg"]
 [ext_resource type="PackedScene" uid="uid://cweq2e8cmrddl" path="res://scenes/sipa.tscn" id="3_lnu2h"]
 [ext_resource type="PackedScene" uid="uid://cjsfchw24vwqg" path="res://scenes/ai.tscn" id="5_iywne"]
+[ext_resource type="Script" uid="uid://b2dvc18diag6b" path="res://scripts/game_over_ui.gd" id="5_kvuet"]
 [ext_resource type="Script" uid="uid://dests1ga6xay3" path="res://scripts/turn_manager.gd" id="5_p57ef"]
-[ext_resource type="Script" path="res://scripts/panel.gd" id="5_u5sy4"]
+[ext_resource type="Script" uid="uid://dp606hpkouqrr" path="res://scripts/panel.gd" id="5_u5sy4"]
 [ext_resource type="Texture2D" uid="uid://p1q1ja31xy4h" path="res://assets/heart_full.png" id="6_gee14"]
 [ext_resource type="Texture2D" uid="uid://cbei3iisr6d7c" path="res://assets/heart_empty.png" id="7_0tnpc"]
 [ext_resource type="FontFile" uid="uid://jywost35iltc" path="res://assets/fonts/dogicapixel.ttf" id="8_0tnpc"]
-[ext_resource type="Script" uid="uid://bcwso6n0wa5ju" path="res://scenes/juggle_counter_panel.gd" id="9_vtaks"]
+[ext_resource type="Script" uid="uid://bcwso6n0wa5ju" path="res://scripts/juggle_counter_panel.gd" id="9_vtaks"]
 [ext_resource type="FontFile" uid="uid://cxnbavq6hj5l7" path="res://assets/fonts/dogicabold.ttf" id="10_kvpfn"]
 [ext_resource type="AudioStream" uid="uid://c13b862nuhf67" path="res://assets/music/Suburban Neighborhood (Sound Effect).mp3" id="12_dinhu"]
 
@@ -480,6 +481,35 @@ normal = Vector2(-1, 0)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_iywne"]
 size = Vector2(595.34, 33.75)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kvuet"]
+bg_color = Color(0.0807833, 0.0807833, 0.0807833, 0.945098)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_kvuet"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_trtic"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ir15t"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ca42v"]
+bg_color = Color(0.376471, 0.682353, 0.403922, 0.917647)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_rysoc"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ssvqc"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_264po"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1kice"]
+bg_color = Color(0.788235, 0.305882, 0.262745, 0.784314)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_iywne"]
 bg_color = Color(0.215902, 0.215902, 0.215902, 0.596078)
 corner_radius_top_left = 10
@@ -570,6 +600,83 @@ collision_mask = 4
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Boundaries/GroundArea"]
 position = Vector2(279, 113)
 shape = SubResource("RectangleShape2D_iywne")
+
+[node name="GameOverUI" type="CanvasLayer" parent="."]
+layer = 2
+script = ExtResource("5_kvuet")
+
+[node name="Panel" type="Panel" parent="GameOverUI"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_kvuet")
+
+[node name="GameOverLabel" type="Label" parent="GameOverUI/Panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -199.0
+offset_top = -170.0
+offset_right = 225.0
+offset_bottom = -31.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("10_kvpfn")
+theme_override_font_sizes/font_size = 70
+
+[node name="WinnerLabel" type="Label" parent="GameOverUI/Panel"]
+layout_mode = 0
+offset_left = 470.0
+offset_top = 254.0
+offset_right = 753.0
+offset_bottom = 330.0
+theme_override_fonts/font = ExtResource("10_kvpfn")
+theme_override_font_sizes/font_size = 30
+
+[node name="RestartButton" type="Button" parent="GameOverUI/Panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -97.0
+offset_top = 14.0
+offset_right = 100.0
+offset_bottom = 64.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("8_0tnpc")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_kvuet")
+theme_override_styles/hover = SubResource("StyleBoxFlat_trtic")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_ir15t")
+theme_override_styles/normal = SubResource("StyleBoxFlat_ca42v")
+text = "Restart"
+
+[node name="QuitButton" type="Button" parent="GameOverUI/Panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -97.0
+offset_top = 80.0
+offset_right = 100.0
+offset_bottom = 131.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("8_0tnpc")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_rysoc")
+theme_override_styles/hover = SubResource("StyleBoxFlat_ssvqc")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_264po")
+theme_override_styles/normal = SubResource("StyleBoxFlat_1kice")
+text = "Quit"
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -756,6 +863,5 @@ position = Vector2(458, -109)
 [node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("12_dinhu")
 autoplay = true
-bus = &"Music"
 
 [connection signal="body_entered" from="Boundaries/GroundArea" to="Sipa" method="_on_ground_area_body_entered"]

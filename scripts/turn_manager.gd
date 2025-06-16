@@ -85,16 +85,21 @@ func end_turn(success: bool):
 
 	start_turn()
 
-
+#CHANGES
 func check_game_over():
 	if player_lives <= 0:
 		print("GAME OVER: AI wins!")
-		get_tree().paused = true
-		emit_signal("game_over", "AI")
+		#get_tree().paused = true
+		show_game_over_ui("AI")
 	elif ai_lives <= 0:
 		print("GAME OVER: Player wins!")
-		get_tree().paused = true
-		emit_signal("game_over", "Player")
+		#get_tree().paused = true
+		show_game_over_ui("Player")
+#CHANGES		
+func show_game_over_ui(winner: String):
+	var ui = get_node("/root/Game/GameOverUI")
+	ui.show_game_over(winner)
+	#get_tree().paused = true  # Optional: pause game
 
 		
 
