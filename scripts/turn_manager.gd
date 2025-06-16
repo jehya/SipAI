@@ -6,8 +6,8 @@ signal game_over(winner)
 var current_turn = "Player"
 var current_juggles = 0
 var required_juggles = 3
-var player_lives = 3
-var ai_lives = 3
+var player_lives = 10
+var ai_lives = 10
 
 func _ready():
 	start_turn()
@@ -69,9 +69,9 @@ func end_turn(success: bool):
 		required_juggles += 1
 
 		if current_turn == "Player":
-			player_lives = 3
+			player_lives = 10
 		else:
-			ai_lives = 3
+			ai_lives = 10
 
 		current_turn = "AI" if current_turn == "Player" else "Player"
 

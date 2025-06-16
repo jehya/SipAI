@@ -1,270 +1,208 @@
-# EnemyAI.gd - Fixed version for testing mechanics
 extends CharacterBody2D
 
-const SPEED = 300.0
-const JUGGLE_FORCE = 400.0
-const KICK_FORCE = 600.0
+const SPEED = 400
+const KICK_DELAY = 0.1
+const KICK_FORCE = 900
 
-# Timers and state
-var juggle_timer = 0.0
-var kick_cooldown = 0.0
-var juggle_count = 0
-var juggle_limit = 3
-var is_juggling = false
+@onready var sipa = get_node("/root/Game/Sipa")
+@onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
+@onready var turn_manager = get_node("/root/Game/TurnManager")
+@onready var player = get_node("/root/Game/Player")
+
 var is_kicking = false
-var is_my_turn = false
-
-#1
+var kick_timer = 0.0
+var ai_juggles = 0
 var initial_position: Vector2
 
+# Q-learning variables
+var q_table = {}  # {state_string: { "kick": float, "pass": float }}
+var learning_rate = 0.1
+var discount_factor = 0.9
+var epsilon = 0.2  # chance to explore random action
 
-# AI behavior state
-enum AIState { IDLE, MOVING_TO_SIPA, JUGGLING, WAITING }
-var current_state = AIState.IDLE
-
-@onready var sipa = get_node("../Sipa")
-@onready var power_meter = get_node("../CanvasLayer/PowerMeter")
-@onready var player = get_node("../Player")
-@onready var animated_sprite = $AnimatedSprite2D
-
-#2
 func _ready():
 	initial_position = position
-	print("AI ready! Testing Sipa mechanics...")
-	# Make sure AI is in the enemy group for collision detection
-	add_to_group("enemy")
 
-#
 func reset_position():
 	position = initial_position
 	velocity = Vector2.ZERO
 
+func start_turn():
+	kick_timer = KICK_DELAY
+	is_kicking = false
+	ai_juggles = 0
+	print("AI Turn Started")
 
 func _physics_process(delta):
-	
-	if not is_my_turn:
-		return  # AI waits until turn starts
-			
-	# Apply gravity
-	if not is_on_floor():
-		velocity += get_gravity() * delta
-	
-	# Update timers
-	update_timers(delta)
-	
-	# Handle AI behavior
-	handle_ai_logic()
-	
-	# Apply movement and animations
-	move_and_slide()
-	update_animations()
-
-func update_timers(delta):
-	if juggle_timer > 0:
-		juggle_timer -= delta
-	
-	if kick_cooldown > 0:
-		kick_cooldown -= delta
-		if kick_cooldown <= 0:
-			is_kicking = false
-			disable_kick_collision()
-
-func handle_ai_logic():
-	var distance_to_sipa = abs(position.x - sipa.position.x)
-	var sipa_height = sipa.position.y
-	
-	match current_state:
-		AIState.IDLE:
-			
-			var turn_manager = get_node("/root/Game/TurnManager")
-			if not turn_manager.is_ai_turn():
-				return  # Stay idle if it’s not AI’s turn
-			# Wait a bit, then start moving toward sipa
-	# Countdown before starting movement
-			if juggle_timer > 0:
-				return
-
-			current_state = AIState.MOVING_TO_SIPA
-			print("AI: Starting to move toward sipa")
-
-		
-		AIState.MOVING_TO_SIPA:
-			move_toward_sipa()
-			
-			# Start juggling when close enough and sipa is low enough
-			if distance_to_sipa < 30 and sipa_height > position.y - 100:
-				start_juggling_sequence()
-		
-		AIState.JUGGLING:
-			# Stay close to sipa
-			if distance_to_sipa > 25:
-				move_toward_sipa()
-			else:
-				velocity.x = 0
-			
-			# Perform juggling actions
-			if juggle_timer <= 0 and kick_cooldown <= 0:
-				if juggle_count < juggle_limit:
-					perform_juggle()
-				else:
-					perform_final_kick()
-					finish_juggling()
-		
-		AIState.WAITING:
-			# Just wait and watch
-			velocity.x = 0
-			if juggle_timer <= 0:
-				current_state = AIState.IDLE
-				print("AI: Done waiting, going idle")
-
-func move_toward_sipa():
-	var direction = 0
-	var target_x = sipa.position.x
-	
-	# Move toward sipa with some tolerance
-	if position.x < target_x - 20:
-		direction = 1
-	elif position.x > target_x + 20:
-		direction = -1
-	
-	velocity.x = direction * SPEED
-
-func start_juggling_sequence():
-	if not is_juggling:
-		print("AI: Starting juggling sequence!")
-		is_juggling = true
-		juggle_count = 0
-		current_state = AIState.JUGGLING
-		juggle_timer = 0.3
-		
-
-
-func perform_juggle():
-	var turn_manager = get_node("/root/Game/TurnManager")
 	if not turn_manager.is_ai_turn():
-		print("AI tried to kick out of turn!")
-		return  # Don’t kick if not AI's turn
-
-	
-	if is_kicking:
 		return
-	
-	print("AI: Juggle #", juggle_count + 1)
-	
-	# Start kick
-	is_kicking = true
-	kick_cooldown = 0.4
-	enable_kick_collision()
-	animated_sprite.play("kick")
-	
-	# Light upward kick to keep sipa bouncing
-	var horizontal_force = randf_range(-100, 100)  # Small random horizontal movement
-	var vertical_force = -JUGGLE_FORCE
-	var impulse = Vector2(horizontal_force, vertical_force)
-	
-	# Apply force to sipa
-	sipa.apply_central_impulse(impulse)
-	
-	juggle_count += 1
-	juggle_timer = 0.8  # Wait before next juggle
 
-func perform_final_kick():
-	
-	var turn_manager = get_node("/root/Game/TurnManager")
-	if not turn_manager.is_ai_turn():
-		print("AI tried to kick out of turn!")
-		return  # Don’t kick if not AI's turn
-
-	if is_kicking:
+	if not sipa or not is_instance_valid(sipa):
 		return
-	
-	print("AI: Final kick to player!")
-	
-	# Start kick
-	is_kicking = true
-	kick_cooldown = 0.5
-	enable_kick_collision()
-	animated_sprite.play("kick")
-	
-	# Stronger kick toward player
-	var direction_to_player = 1 if player.position.x > position.x else -1
-	var power_ratio = power_meter.get_power_ratio() if power_meter else 0.7
-	var force = lerp(JUGGLE_FORCE, KICK_FORCE, power_ratio)
-	
-	var impulse = Vector2(direction_to_player * force * 0.8, -force)
-	sipa.apply_central_impulse(impulse)
-	
-	await get_tree().create_timer(0.3).timeout  # Let animation/sipa settle
-	turn_manager.successful_juggle()  # This ends turn with success
 
-func finish_juggling():
-	print("AI: Finished juggling, waiting...")
-	is_juggling = false
-	juggle_count = 0
-	current_state = AIState.WAITING
-	juggle_timer = 2.0  # Wait before starting again
+	kick_timer -= delta
 
-func update_animations():
-	# Don't change animation while kicking
-	if is_kicking:
-		return
-	
-	# Movement animations
-	if abs(velocity.x) > 50:
-		animated_sprite.play("run")
-		animated_sprite.flip_h = (velocity.x < 0)
+	var sipa_pos = sipa.global_position
+	var distance = global_position.distance_to(sipa_pos)
+	var direction = sign(sipa_pos.x - global_position.x)
+
+	# Only move if sipa is too far
+	if distance > 50 and not is_kicking:
+		velocity.x = direction * SPEED
+		sprite.flip_h = direction < 0
+		sprite.play("run_ai")
 	else:
-		animated_sprite.play("idle")
+		velocity.x = 0  # stay in place
+		if not is_kicking:
+			sprite.play("idle_ai")
 
-func enable_kick_collision():
-	collision_layer |= 8  # Add bit 4 (Layer 3)
-	print("AI: Kick collision enabled")
+	move_and_slide()
 
-func disable_kick_collision():
-	collision_layer &= ~8  # Remove bit 4 (Layer 3)
-	print("AI: Kick collision disabled")
+	# Dribble only if close enough and ready to kick
+	if distance <= 50 and not is_kicking and kick_timer <= 0:
+		is_kicking = true
+		sprite.play("kick_ai")
 
-# Debug functions you can call from the main scene
-func debug_force_juggle():
-	current_state = AIState.MOVING_TO_SIPA
-	juggle_timer = 0.1
-	print("Debug: Forcing AI to start juggling")
+		var action = decide_action()
+		if action == "pass":
+			perform_pass()
+		else:
+			perform_kick()
+			ai_juggles += 1
 
-func debug_reset():
-	current_state = AIState.IDLE
-	is_juggling = false
-	is_kicking = false
-	juggle_count = 0
-	juggle_timer = 1.0
-	kick_cooldown = 0
-	disable_kick_collision()
-	print("Debug: AI reset to idle state")
+		await get_tree().create_timer(0.3).timeout
+		is_kicking = false
+		kick_timer = KICK_DELAY
 
-func debug_info():
-	print("AI State: ", AIState.keys()[current_state])
-	print("Distance to sipa: ", abs(position.x - sipa.position.x))
-	print("Juggle count: ", juggle_count, "/", juggle_limit)
-	print("Is kicking: ", is_kicking)
-	print("Timers - Juggle: ", juggle_timer, " Kick: ", kick_cooldown)
 
-#func start_ai_turn(juggles_required):
-	# Use a timer or yield-based loop to kick the ball n times
-	#for i in juggles_required:
-		#await get_tree().create_timer(0.6).timeout
-		#perform_juggle()
+	# Perform action only if close enough and ready to kick
+	if distance <= 50 and not is_kicking and kick_timer <= 0:
+		is_kicking = true
+		sprite.play("kick_ai")
 
-func start_turn():
-	print("AI: My turn has started!")
-	is_my_turn = true
-	await get_tree().create_timer(0.1).timeout 
-	current_state = AIState.IDLE
-	juggle_timer = 1.0
+		# Use hybrid Q-learning + Minimax to decide action
+		var action = decide_action()
+		if action == "pass":
+			perform_pass()
+		else:
+			perform_kick()
+			ai_juggles += 1
+
+		await get_tree().create_timer(0.3).timeout
+		is_kicking = false
+		kick_timer = KICK_DELAY
 
 func end_turn():
-	is_my_turn = false
-	velocity = Vector2.ZERO
-	current_state = AIState.IDLE
-	juggle_timer = 999  # Prevent retry
-	kick_cooldown = 999
-	disable_kick_collision()
-	print("AI: My turn is over.")
+	print("AI's turn ended (missed or failed).")
+	is_kicking = false
+	kick_timer = 0.0
+	sprite.play("idle_ai")
+
+
+func perform_kick():
+	if sipa:
+		velocity.x = 0
+		var direction = sign(sipa.global_position.x - global_position.x)  # +1 right, -1 left
+		var impulse = Vector2(direction * 300, -KICK_FORCE)  # Kick diagonally upward towards sipa
+		sipa.apply_central_impulse(impulse)
+		turn_manager.successful_juggle()
+		print("AI juggle", ai_juggles + 1)
+		sprite.play("kick_ai")
+
+func perform_pass():
+	if sipa:
+		velocity.x = 0
+		var direction = sign(player.global_position.x - global_position.x)  # direction towards player
+		var impulse = Vector2(direction * 200, -KICK_FORCE)  # Pass diagonally upward toward player
+		sipa.apply_central_impulse(impulse)
+		turn_manager.successful_juggle()
+		print("AI passed the Sipa")
+		sprite.play("idle_ai")
+
+
+
+# --- MINIMAX LOGIC ---
+
+func minimax_decision(current_juggles, required_juggles, depth):
+	var kick_score = minimax(current_juggles + 1, required_juggles, depth - 1, false, "kick->")
+	var pass_score = minimax(required_juggles, required_juggles, depth - 1, false, "pass->")
+
+	print("Minimax Decision [Juggles: %d/%d, Depth: %d] → kick_score: %d, pass_score: %d"
+		% [current_juggles, required_juggles, depth, kick_score, pass_score])
+
+	if kick_score > pass_score:
+		print("→ AI chooses: KICK")
+		return "kick"
+	else:
+		print("→ AI chooses: PASS")
+		return "pass"
+
+func minimax(current_juggles, required_juggles, depth, is_ai_turn, trace: String = ""):
+	if current_juggles >= required_juggles:
+		print(trace + " [Juggles Met ✅] → Score: 10")
+		return 10
+
+	if depth == 0:
+		print(trace + " [Depth Limit 🛑] → Score: 0")
+		return 0
+
+	if is_ai_turn:
+		var score_kick = minimax(current_juggles + 1, required_juggles, depth - 1, false, trace + "kick->")
+		var score_pass = minimax(required_juggles, required_juggles, depth - 1, false, trace + "pass->")
+		var max_score = max(score_kick, score_pass)
+		print(trace + " [AI Turn 🤖] Max(kick: %d, pass: %d) = %d" % [score_kick, score_pass, max_score])
+		return max_score
+	else:
+		print(trace + " [Player Turn 🧍] Forcing early pass → Score: -10")
+		return -10
+
+
+# --- Q-LEARNING LOGIC ---
+
+func encode_state() -> String:
+	# Encode state as a string key for Q-table
+	# Using discretized distance and relative player position and current juggles
+	var sipa_pos = sipa.global_position
+	var dist = int(global_position.distance_to(sipa_pos) / 10)  # distance bucketed by 10 px
+	var player_pos = player.global_position
+	var rel_player = sign(player_pos.x - global_position.x)  # -1 left, 0 same, 1 right
+
+	return str(ai_juggles) + "|" + str(dist) + "|" + str(rel_player)
+
+func q_learning_choose_action(state: String) -> String:
+	if randf() < epsilon:
+		# Exploration: choose random action
+		return ["kick", "pass"][randi() % 2]
+	else:
+		# Exploitation: choose best Q-value action
+		if not q_table.has(state):
+			q_table[state] = {"kick": 0.0, "pass": 0.0}
+		var actions = q_table[state]
+		if actions["kick"] >= actions["pass"]:
+			return "kick"
+		else:
+			return "pass"
+
+func update_q_with_minimax(state: String, minimax_action: String) -> void:
+	if not q_table.has(state):
+		q_table[state] = {"kick": 0.0, "pass": 0.0}
+	
+	var current_q = q_table[state][minimax_action]
+	var reward = 10  # reward for good action (tweak as needed)
+	
+	q_table[state][minimax_action] = current_q + learning_rate * (reward - current_q)
+
+
+# --- HYBRID DECISION FUNCTION ---
+
+func decide_action() -> String:
+	var state = encode_state()
+
+	# Get Minimax recommended action
+	var minimax_action = minimax_decision(ai_juggles, turn_manager.required_juggles, 2)
+
+	# Teach Q-learning with Minimax's suggestion
+	update_q_with_minimax(state, minimax_action)
+
+	# Choose action from Q-learning policy
+	return q_learning_choose_action(state)
