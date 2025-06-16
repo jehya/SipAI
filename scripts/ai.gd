@@ -12,6 +12,8 @@ var juggle_count = 0
 var juggle_limit = 3
 var is_juggling = false
 var is_kicking = false
+var is_my_turn = false
+
 
 # AI behavior state
 enum AIState { IDLE, MOVING_TO_SIPA, JUGGLING, WAITING }
@@ -28,6 +30,10 @@ func _ready():
 	add_to_group("enemy")
 
 func _physics_process(delta):
+	
+	if not is_my_turn:
+		return  # AI waits until turn starts
+			
 	# Apply gravity
 	if not is_on_floor():
 		velocity += get_gravity() * delta
@@ -58,11 +64,18 @@ func handle_ai_logic():
 	
 	match current_state:
 		AIState.IDLE:
+			
+			var turn_manager = get_node("/root/Game/TurnManager")
+			if not turn_manager.is_ai_turn():
+				return  # Stay idle if it’s not AI’s turn
 			# Wait a bit, then start moving toward sipa
-			if juggle_timer <= 0:
-				current_state = AIState.MOVING_TO_SIPA
-				juggle_timer = 1.0  # Give sipa time to settle
-				print("AI: Starting to move toward sipa")
+	# Countdown before starting movement
+			if juggle_timer > 0:
+				return
+
+			current_state = AIState.MOVING_TO_SIPA
+			print("AI: Starting to move toward sipa")
+
 		
 		AIState.MOVING_TO_SIPA:
 			move_toward_sipa()
@@ -112,8 +125,16 @@ func start_juggling_sequence():
 		juggle_count = 0
 		current_state = AIState.JUGGLING
 		juggle_timer = 0.3
+		
+
 
 func perform_juggle():
+	var turn_manager = get_node("/root/Game/TurnManager")
+	if not turn_manager.is_ai_turn():
+		print("AI tried to kick out of turn!")
+		return  # Don’t kick if not AI's turn
+
+	
 	if is_kicking:
 		return
 	
@@ -137,6 +158,12 @@ func perform_juggle():
 	juggle_timer = 0.8  # Wait before next juggle
 
 func perform_final_kick():
+	
+	var turn_manager = get_node("/root/Game/TurnManager")
+	if not turn_manager.is_ai_turn():
+		print("AI tried to kick out of turn!")
+		return  # Don’t kick if not AI's turn
+
 	if is_kicking:
 		return
 	
@@ -155,6 +182,9 @@ func perform_final_kick():
 	
 	var impulse = Vector2(direction_to_player * force * 0.8, -force)
 	sipa.apply_central_impulse(impulse)
+	
+	await get_tree().create_timer(0.3).timeout  # Let animation/sipa settle
+	turn_manager.successful_juggle()  # This ends turn with success
 
 func finish_juggling():
 	print("AI: Finished juggling, waiting...")
@@ -205,3 +235,22 @@ func debug_info():
 	print("Juggle count: ", juggle_count, "/", juggle_limit)
 	print("Is kicking: ", is_kicking)
 	print("Timers - Juggle: ", juggle_timer, " Kick: ", kick_cooldown)
+
+#func start_ai_turn(juggles_required):
+	# Use a timer or yield-based loop to kick the ball n times
+	#for i in juggles_required:
+		#await get_tree().create_timer(0.6).timeout
+		#perform_juggle()
+
+func start_turn():
+	print("AI: My turn has started!")
+	is_my_turn = true
+	await get_tree().create_timer(0.1).timeout 
+	current_state = AIState.IDLE
+	juggle_timer = 1.0
+
+func end_turn():
+	is_my_turn = false
+	velocity = Vector2.ZERO
+	current_state = AIState.IDLE
+	print("AI: My turn is over.")

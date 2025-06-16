@@ -22,6 +22,17 @@ func _on_body_exited(body):
 func _physics_process(delta):
 	if touching_body == null:
 		return
+		
+
+	
+	var turn_manager = get_node("/root/Game/TurnManager")
+	
+	
+	# Prevent wrong turn kicks
+	if touching_body.is_in_group("player") and not turn_manager.is_player_turn():
+		return
+	if touching_body.is_in_group("enemy") and not turn_manager.is_ai_turn():
+		return
 
 	# Only apply impulse if the body is currently in kick (Layer 3 → bit 4 = 8)
 	if (touching_body.collision_layer & 8) != 0:
@@ -46,11 +57,14 @@ func _physics_process(delta):
 
 		var impulse = Vector2(horizontal * 200, -force).normalized() * force
 		apply_central_impulse(impulse)
+		
+		turn_manager.successful_juggle()
 
 		print("Impulse by:", touching_body.name, " → ", impulse)
 
 		# prevent multiple impulses during same kick
 		touching_body = null
+		
 func start_round(who_starts: String):
 	# Always collide with floor (Layer 4 = 8) + current kicker
 	match who_starts:
@@ -60,3 +74,9 @@ func start_round(who_starts: String):
 			collision_mask = 2 | 8  # AI (2) + floor (8)
 
 	print("Sipa collision mask set for:", who_starts)
+
+
+func _on_ground_area_body_entered(body: Node2D) -> void:
+	if body == self:
+		print("Sipa hit the ground!")
+		get_node("/root/Game/TurnManager").end_turn(false)
