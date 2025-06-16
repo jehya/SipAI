@@ -31,8 +31,13 @@ func end_turn(success: bool):
 	if not success:
 		if current_turn == "Player":
 			player_lives -= 1
+		
+			var ui_panel = get_node("/root/Game/CanvasLayer/Panel")
+			ui_panel.update_hearts(player_lives)
 		else:
 			ai_lives -= 1
+			var ai_ui_panel = get_node("/root/Game/CanvasLayer/AI_Panel")
+			ai_ui_panel.update_hearts(ai_lives)
 
 		print("%s missed! Lives remaining - Player: %d, AI: %d" %
 			  [current_turn, player_lives, ai_lives])

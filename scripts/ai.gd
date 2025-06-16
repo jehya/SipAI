@@ -13,6 +13,8 @@ var juggle_limit = 3
 var is_juggling = false
 var is_kicking = false
 var is_my_turn = false
+
+#1
 var initial_position: Vector2
 
 
@@ -25,12 +27,14 @@ var current_state = AIState.IDLE
 @onready var player = get_node("../Player")
 @onready var animated_sprite = $AnimatedSprite2D
 
+#2
 func _ready():
 	initial_position = position
 	print("AI ready! Testing Sipa mechanics...")
 	# Make sure AI is in the enemy group for collision detection
 	add_to_group("enemy")
 
+#
 func reset_position():
 	position = initial_position
 	velocity = Vector2.ZERO
