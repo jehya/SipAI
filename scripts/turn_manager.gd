@@ -9,14 +9,19 @@ var required_juggles = 3
 var player_lives = 5
 var ai_lives = 5
 
+@onready var counter_panel = get_node("/root/Game/CanvasLayer/JuggleCounterPanel")
+
 func _ready():
 	start_turn()
 	
+
 
 func start_turn():
 	current_juggles = 0
 	emit_signal("turn_started", current_turn)
 	print("%s's turn! Juggles required: %d" % [current_turn, required_juggles])
+
+	counter_panel.update_counters(required_juggles, current_juggles, current_turn)
 
 	if current_turn == "AI":
 		var ai_node = get_node("/root/Game/AI")  # Adjust if needed
@@ -24,6 +29,8 @@ func start_turn():
 
 func successful_juggle():
 	current_juggles += 1
+	counter_panel.update_counters(required_juggles, current_juggles, current_turn)
+	
 	if current_juggles >= required_juggles:
 		end_turn(true)
 
