@@ -5,11 +5,11 @@
 [ext_resource type="PackedScene" uid="uid://cweq2e8cmrddl" path="res://scenes/sipa.tscn" id="3_lnu2h"]
 [ext_resource type="PackedScene" uid="uid://cjsfchw24vwqg" path="res://scenes/ai.tscn" id="5_iywne"]
 [ext_resource type="Script" uid="uid://dests1ga6xay3" path="res://scripts/turn_manager.gd" id="5_p57ef"]
-[ext_resource type="Script" path="res://scripts/panel.gd" id="5_u5sy4"]
+[ext_resource type="Script" uid="uid://dp606hpkouqrr" path="res://scripts/panel.gd" id="5_u5sy4"]
 [ext_resource type="Texture2D" uid="uid://p1q1ja31xy4h" path="res://assets/heart_full.png" id="6_gee14"]
 [ext_resource type="Texture2D" uid="uid://cbei3iisr6d7c" path="res://assets/heart_empty.png" id="7_0tnpc"]
 [ext_resource type="FontFile" uid="uid://jywost35iltc" path="res://assets/fonts/dogicapixel.ttf" id="8_0tnpc"]
-[ext_resource type="Script" path="res://scenes/juggle_counter_panel.gd" id="9_vtaks"]
+[ext_resource type="Script" uid="uid://bcwso6n0wa5ju" path="res://scenes/juggle_counter_panel.gd" id="9_vtaks"]
 [ext_resource type="FontFile" uid="uid://cxnbavq6hj5l7" path="res://assets/fonts/dogicabold.ttf" id="10_kvpfn"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_lnu2h"]
@@ -676,7 +676,7 @@ layout_mode = 2
 offset_left = 457.0
 offset_top = 49.0
 offset_right = 689.0
-offset_bottom = 145.0
+offset_bottom = 167.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_kvpfn")
 script = ExtResource("9_vtaks")
 
@@ -729,6 +729,19 @@ theme_override_fonts/font = ExtResource("10_kvpfn")
 theme_override_font_sizes/font_size = 40
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="TurnLabel" type="Label" parent="CanvasLayer/JuggleCounterPanel"]
+layout_mode = 0
+offset_left = 59.0
+offset_top = 96.0
+offset_right = 155.0
+offset_bottom = 119.0
+theme_override_colors/font_color = Color(0, 1, 0, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 3
+theme_override_fonts/font = ExtResource("8_0tnpc")
+theme_override_font_sizes/font_size = 12
+horizontal_alignment = 1
 
 [node name="TurnManager" type="Node" parent="."]
 script = ExtResource("5_p57ef")
