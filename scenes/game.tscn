@@ -614,10 +614,10 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="AI_Panel" type="Panel" parent="CanvasLayer"]
-offset_left = 789.0
-offset_top = 21.0
-offset_right = 1083.0
-offset_bottom = 88.0
+offset_left = 840.0
+offset_top = 20.0
+offset_right = 1134.0
+offset_bottom = 87.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_iywne")
 script = ExtResource("5_u5sy4")
 heart_full = ExtResource("6_gee14")
@@ -648,19 +648,19 @@ offset_top = 13.0
 offset_right = 47.0
 offset_bottom = 53.0
 
-[node name="AI_Heart1" type="TextureRect" parent="CanvasLayer/AI_Panel/HBoxContainer"]
-layout_mode = 2
-
-[node name="AI_Heart2" type="TextureRect" parent="CanvasLayer/AI_Panel/HBoxContainer"]
-layout_mode = 2
-
-[node name="AI_Heart3" type="TextureRect" parent="CanvasLayer/AI_Panel/HBoxContainer"]
+[node name="AI_Heart5" type="TextureRect" parent="CanvasLayer/AI_Panel/HBoxContainer"]
 layout_mode = 2
 
 [node name="AI_Heart4" type="TextureRect" parent="CanvasLayer/AI_Panel/HBoxContainer"]
 layout_mode = 2
 
-[node name="AI_Heart5" type="TextureRect" parent="CanvasLayer/AI_Panel/HBoxContainer"]
+[node name="AI_Heart3" type="TextureRect" parent="CanvasLayer/AI_Panel/HBoxContainer"]
+layout_mode = 2
+
+[node name="AI_Heart2" type="TextureRect" parent="CanvasLayer/AI_Panel/HBoxContainer"]
+layout_mode = 2
+
+[node name="AI_Heart1" type="TextureRect" parent="CanvasLayer/AI_Panel/HBoxContainer"]
 layout_mode = 2
 
 [node name="TurnManager" type="Node" parent="."]
