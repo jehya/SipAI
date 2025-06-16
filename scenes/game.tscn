@@ -1,9 +1,10 @@
-[gd_scene load_steps=9 format=4 uid="uid://b1mygb0vqyh2a"]
+[gd_scene load_steps=12 format=4 uid="uid://b1mygb0vqyh2a"]
 
 [ext_resource type="PackedScene" uid="uid://c7hs8oh4x4uxb" path="res://scenes/player.tscn" id="1_uwrxv"]
 [ext_resource type="Texture2D" uid="uid://daw8a8sjcvy1h" path="res://assets/bg_game.png" id="1_yqjtg"]
 [ext_resource type="PackedScene" uid="uid://cweq2e8cmrddl" path="res://scenes/sipa.tscn" id="3_lnu2h"]
 [ext_resource type="PackedScene" uid="uid://cjsfchw24vwqg" path="res://scenes/ai.tscn" id="5_iywne"]
+[ext_resource type="Script" uid="uid://dests1ga6xay3" path="res://scripts/turn_manager.gd" id="5_p57ef"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_lnu2h"]
 texture = ExtResource("1_yqjtg")
@@ -469,6 +470,16 @@ normal = Vector2(1, 0)
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_lnu2h"]
 normal = Vector2(-1, 0)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_iywne"]
+size = Vector2(595.34, 33.75)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_iywne"]
+bg_color = Color(0.215902, 0.215902, 0.215902, 0.596078)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
 [node name="Game" type="Node2D"]
 
 [node name="TileMap" type="TileMap" parent="."]
@@ -510,7 +521,7 @@ collision_layer = 8
 collision_mask = 7
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Boundaries/horizontal"]
-polygon = PackedVector2Array(-161, 0, 445, -1, 531, -2, 528, -317, -235, -316, -237, 1, -162, 0, -158, 32, -158, 62, -296, 61, -295, -373, 592, -375, 587, 62, -159, 62)
+polygon = PackedVector2Array(-161, 0, 445, -1, 464, -3, 459, -317, -183, -314, -182, -140, -182, -1, -162, 0, -158, 32, -158, 62, -296, 61, -295, -373, 592, -375, 587, 62, -159, 62)
 
 [node name="leftlimit" type="StaticBody2D" parent="Boundaries"]
 position = Vector2(-24, -3)
@@ -524,4 +535,24 @@ position = Vector2(576, -1)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Boundaries/rightlimit"]
 shape = SubResource("WorldBoundaryShape2D_lnu2h")
 
+[node name="GroundArea" type="Area2D" parent="Boundaries"]
+collision_layer = 16
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Boundaries/GroundArea"]
+position = Vector2(279, 113)
+shape = SubResource("RectangleShape2D_iywne")
+
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Panel" type="Panel" parent="CanvasLayer"]
+offset_left = 19.0
+offset_top = 18.0
+offset_right = 193.0
+offset_bottom = 85.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_iywne")
+
+[node name="TurnManager" type="Node" parent="."]
+script = ExtResource("5_p57ef")
+
+[connection signal="body_entered" from="Boundaries/GroundArea" to="Sipa" method="_on_ground_area_body_entered"]
