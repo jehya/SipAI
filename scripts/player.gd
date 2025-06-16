@@ -1,6 +1,6 @@
 extends CharacterBody2D
 
-const SPEED = 200.0
+const SPEED = 300.0
 const JUMP_VELOCITY = -400.0
 
 var is_kicking = false
@@ -37,9 +37,11 @@ func _physics_process(delta: float) -> void:
 		
 	if is_kicking:
 		kick_timer -= delta
+		velocity.x = 0
 		if kick_timer <= 0.0:
 			is_kicking = false
 			disable_kick_collision()
+			
 	else:
 		var direction := Input.get_axis("move_left", "move_right")
 	

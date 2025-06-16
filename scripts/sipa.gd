@@ -36,6 +36,7 @@ func reset_position(who_starts: String):
 	sleeping = true
 	linear_velocity = Vector2.ZERO
 	angular_velocity = 0
+	rotation = 0
 
 	set_deferred("global_position", target_position)
 	set_deferred("sleeping", false)

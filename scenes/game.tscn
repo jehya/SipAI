@@ -521,7 +521,7 @@ collision_layer = 8
 collision_mask = 7
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Boundaries/horizontal"]
-polygon = PackedVector2Array(-161, 0, 445, -1, 445, 0, 448, -374, -163, -371, -163, -146, -163, -1, -162, 0, -158, 32, -158, 62, -296, 61, -295, -373, 592, -375, 587, 62, -159, 62)
+polygon = PackedVector2Array(-161, 0, 445, -1, 435, -1, 430, -372, -149, -370, -148, -149, -147, -2, -162, 0, -158, 32, -158, 62, -296, 61, -295, -373, 592, -375, 587, 62, -159, 62)
 
 [node name="leftlimit" type="StaticBody2D" parent="Boundaries"]
 position = Vector2(-24, -3)
