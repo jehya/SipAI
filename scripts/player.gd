@@ -8,7 +8,7 @@ var kick_timer = 0.0
 const KICK_DURATION = 0.3
 var initial_position: Vector2
 
-
+@onready var sfx_kick: AudioStreamPlayer2D = $sfx_kick
 @onready var animated_sprite_2d: AnimatedSprite2D = $AnimatedSp
 
 func _ready():
@@ -32,6 +32,7 @@ func _physics_process(delta: float) -> void:
 	if (Input.is_action_just_pressed("kick_high") or Input.is_action_just_pressed("kick_medium") or Input.is_action_just_pressed("kick_short"))and not is_kicking:
 		is_kicking = true
 		kick_timer = KICK_DURATION
+		sfx_kick.play()
 		enable_kick_collision()
 		animated_sprite_2d.play("kick")
 		

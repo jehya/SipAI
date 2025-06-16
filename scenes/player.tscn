@@ -1,9 +1,10 @@
-[gd_scene load_steps=18 format=3 uid="uid://c7hs8oh4x4uxb"]
+[gd_scene load_steps=19 format=3 uid="uid://c7hs8oh4x4uxb"]
 
 [ext_resource type="Script" uid="uid://05j62coo16xg" path="res://scripts/player.gd" id="1_g2els"]
 [ext_resource type="Texture2D" uid="uid://dtba1ufqkeloi" path="res://assets/DRIBBLE.png" id="2_dqkch"]
 [ext_resource type="Texture2D" uid="uid://jkd66c1qyhik" path="res://assets/IDLE.png" id="2_g2els"]
 [ext_resource type="Texture2D" uid="uid://07a588jhe5px" path="res://assets/RUN.png" id="4_qlg0r"]
+[ext_resource type="AudioStream" uid="uid://ca4rlfd4c1p5v" path="res://assets/music/sfx_kick.mp3" id="5_qlg0r"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_qhqgy"]
 atlas = ExtResource("2_g2els")
@@ -119,3 +120,8 @@ frame_progress = 0.341284
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(-14.5, -13.5)
 shape = SubResource("RectangleShape2D_dqkch")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+
+[node name="sfx_kick" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("5_qlg0r")

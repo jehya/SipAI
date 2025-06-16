@@ -9,6 +9,7 @@ const PASS_FORCE = 900     # Strong force for passing
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var turn_manager = get_node("/root/Game/TurnManager")
 @onready var player = get_node("/root/Game/Player")
+@onready var sfx_kick: AudioStreamPlayer2D = $sfx_kick
 
 var is_kicking = false
 var kick_timer = 0.0
@@ -101,6 +102,7 @@ func _physics_process(delta):
 	# Only perform kicks during AI's turn
 	if turn_manager.is_ai_turn() and distance_to_sipa <= 60 and not is_kicking and kick_timer <= 0:
 		is_kicking = true
+		sfx_kick.play()
 		sprite.play("kick_ai")
 		decision_count += 1
 
@@ -246,6 +248,7 @@ func perform_dribble():
 		print("  • Applied impulse: (%.1f, %.1f)" % [impulse.x, impulse.y])
 		print("  • Juggle count now: %d/%d" % [ai_juggles + 1, turn_manager.required_juggles])
 		
+		sfx_kick.play()
 		sprite.play("kick_ai")
 
 func perform_pass():
