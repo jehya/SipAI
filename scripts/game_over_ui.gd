@@ -25,6 +25,7 @@ func show_game_over(winner: String):
 	visible = true
 
 func restart_game():
+	Global.show_tutorial = false
 	get_tree().reload_current_scene()
 
 func quit_game():

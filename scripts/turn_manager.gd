@@ -1,5 +1,6 @@
 extends Node
 
+
 signal turn_started(player_name)
 signal game_over(winner)
 
@@ -9,15 +10,30 @@ var required_juggles = 3
 var player_lives = 5
 var ai_lives = 5
 
+
 @onready var counter_panel = get_node("/root/Game/CanvasLayer/JuggleCounterPanel")
+@onready var tutorial_ui = get_node("/root/Game/TutorialCanvas")
+
+#Added new
+
 
 func _ready():
-	start_turn()
+	if Global.show_tutorial:
+		tutorial_ui.start_tutorial()
+		tutorial_ui.tutorial_finished.connect(start_game_after_tutorial)
+	else:
+		start_turn()
+
+	
+func start_game_after_tutorial():
+	start_turn()  # or any function you use to start the actual game
 	
 
 
 func start_turn():
 	current_juggles = 0
+	#Added
+
 	emit_signal("turn_started", current_turn)
 	print("%s's turn! Juggles required: %d" % [current_turn, required_juggles])
 
@@ -26,8 +42,16 @@ func start_turn():
 	if current_turn == "AI":
 		var ai_node = get_node("/root/Game/AI")  # Adjust if needed
 		ai_node.start_turn()  # Let the AI begin kickingaaaaaaasdajskkad
+	
+	#Added
+	#var countdown_ui = get_node("/root/Game/CountdownLabel")
+	#countdown_ui.start_countdown(3)  # 3-second countdown
 
+	#retry_timer.start(3.0)#
+	
 func successful_juggle():
+	#if is_waiting:
+		#return
 	current_juggles += 1
 	counter_panel.update_counters(required_juggles, current_juggles, current_turn)
 	
@@ -67,6 +91,7 @@ func end_turn(success: bool):
 		else:
 			ai_node.end_turn()
 
+		#Replaced
 		# DO NOT switch turn — retry same player
 		start_turn()
 		return
