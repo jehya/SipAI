@@ -1,8 +1,8 @@
 extends CharacterBody2D
 
 const SPEED = 250
-const KICK_DELAY = 0.1
-const DRIBBLE_FORCE = 600  # Gentle force for dribbling
+const KICK_DELAY = 0.3
+const DRIBBLE_FORCE = 900  # Gentle force for dribbling
 const PASS_FORCE = 900     # Strong force for passing
 
 @onready var sipa = get_node("/root/Game/Sipa")
@@ -19,11 +19,15 @@ var target_position: Vector2
 
 # Real Q-learning variables
 var q_table = {}  # {state_string: { "kick": float, "pass": float }}
-var learning_rate = 0.8     # Slightly faster learning due to fewer chances
-var discount_factor = 0.5   # High value on long-term survival
-var epsilon = 0.3           # Lower initial exploration (can't afford many mistakes)
-var epsilon_decay = 0.992   # Faster convergence to safe strategies
-var epsilon_min = 0.02      # Very low randomness when lives are precious
+var learning_rate = 0.7     # Moderate learning - allows adaptation but not too volatile
+var discount_factor = 0.8   # High future reward consideration for long-term strategy
+var epsilon = 0.25          # Balanced exploration - enough unpredictability without recklessness
+var epsilon_decay = 0.995   # Slower decay to maintain strategic unpredictability longer
+var epsilon_min = 0.08      # Higher minimum to keep some tactical surprise element
+
+# Additional strategic parameters
+var lives_threshold = 3     # When to switch to more aggressive/unpredictable play
+var aggression_bonus = 0.15 # Extra exploration when player has fewer lives
 
 # Experience tracking for Q-learning
 var previous_state: String = ""
@@ -319,7 +323,26 @@ func encode_state() -> String:
 		player_relative_pos,
 		juggle_progress
 	]
-
+		
+func get_dynamic_epsilon() -> float:
+	var base_epsilon = epsilon
+	
+	# Get current lives from turn manager
+	var player_lives = turn_manager.player_lives
+	var ai_lives = turn_manager.ai_lives
+	
+	# Become more unpredictable when player is losing (AI winning)
+	if player_lives < lives_threshold:
+		base_epsilon += aggression_bonus
+		print("  • Aggression mode: Player has %d lives, epsilon boosted by %.2f" % [player_lives, aggression_bonus])
+	
+	# Become more conservative when AI is losing
+	if ai_lives < lives_threshold:
+		base_epsilon *= 0.7
+		print("  • Conservative mode: AI has %d lives, epsilon reduced by 30%%" % ai_lives)
+	
+	return min(base_epsilon, 0.4)  # Cap at 40% to avoid being too random
+	
 # --- Q-LEARNING IMPLEMENTATION ---
 func q_learning_choose_action(state: String) -> String:
 	# Initialize state if not exists
@@ -329,8 +352,9 @@ func q_learning_choose_action(state: String) -> String:
 	var q_values = q_table[state]
 	var chosen_action: String
 	var decision_type: String
+	var dynamic_epsilon = get_dynamic_epsilon()  # Use dynamic epsilon instead of static
 	
-	if randf() < epsilon:
+	if randf() < dynamic_epsilon:
 		# Exploration: choose random action with strategic bias
 		var actions = ["kick", "kick", "kick", "pass"]  # 75% dribble, 25% pass
 		chosen_action = actions[randi() % actions.size()]
@@ -342,7 +366,8 @@ func q_learning_choose_action(state: String) -> String:
 	
 	# Enhanced decision logging
 	print("Q-LEARNING DECISION:")
-	print("  • Method: %s (epsilon: %.3f)" % [decision_type, epsilon])
+	print("  • Method: %s (dynamic epsilon: %.3f vs base: %.3f)" % [decision_type, dynamic_epsilon, epsilon])
+	print("  • Game state: Player lives=%d, AI lives=%d" % [turn_manager.player_lives, turn_manager.ai_lives])
 	print("  • Q-values: KICK=%.3f, PASS=%.3f" % [q_values["kick"], q_values["pass"]])
 	print("  • Best action by Q-values: %s" % ("KICK" if q_values["kick"] >= q_values["pass"] else "PASS"))
 	print("  • Action selected: %s" % chosen_action.to_upper())
