@@ -2,8 +2,8 @@ extends CharacterBody2D
 
 const SPEED = 250
 const KICK_DELAY = 0.3
-const DRIBBLE_FORCE = 900  # Gentle force for dribbling
-const PASS_FORCE = 900     # Strong force for passing
+const DRIBBLE_FORCE = 900  
+const PASS_FORCE = 900    
 
 @onready var sipa = get_node("/root/Game/Sipa")
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
@@ -17,15 +17,15 @@ var ai_juggles = 0
 var initial_position: Vector2
 var target_position: Vector2
 
-# Real Q-learning variables
+# Q-learning variables
 var q_table = {}  # {state_string: { "kick": float, "pass": float }}
 var learning_rate = 0.7     # Moderate learning - allows adaptation but not too volatile
-var discount_factor = 0.8   # High future reward consideration for long-term strategy
-var epsilon = 0.25          # Balanced exploration - enough unpredictability without recklessness
+var discount_factor = 0.8   # High means for long term 
+var epsilon = 0.25          # Balanced exploration (not too much random  movements)
 var epsilon_decay = 0.995   # Slower decay to maintain strategic unpredictability longer
-var epsilon_min = 0.08      # Higher minimum to keep some tactical surprise element
+var epsilon_min = 0.08      # Balance minimum epsilon for random/safe actions
 
-# Additional strategic parameters
+# Strategic parameters
 var lives_threshold = 3     # When to switch to more aggressive/unpredictable play
 var aggression_bonus = 0.15 # Extra exploration when player has fewer lives
 
@@ -37,6 +37,7 @@ var total_episodes = 0
 
 # Decision tracking for enhanced logging
 var decision_count = 0
+
 
 func _ready():
 	initial_position = position
@@ -60,6 +61,7 @@ func start_turn():
 	print("========================\n")
 
 func _physics_process(delta):
+		
 	if not sipa or not is_instance_valid(sipa):
 		return
 
@@ -69,9 +71,9 @@ func _physics_process(delta):
 	var distance_to_sipa = global_position.distance_to(sipa_pos)
 	var sipa_velocity = sipa.linear_velocity
 	
-	# Movement logic - only move when necessary
+	# Movement logic
 	if turn_manager.is_ai_turn():
-		# During AI's turn: only move if sipa is drifting away or too far
+		#for sipa if lumalayo na sa agent
 		var sipa_is_moving_away = is_sipa_moving_away()
 		var sipa_too_far = distance_to_sipa > 80
 		
@@ -82,12 +84,12 @@ func _physics_process(delta):
 			sprite.flip_h = direction_to_sipa < 0
 			sprite.play("run_ai")
 		else:
-			# Stay in place for dribbling
+			# for inplace dribble
 			velocity.x = 0
 			if not is_kicking:
 				sprite.play("idle_ai")
 	else:
-		# During player's turn: strategic positioning
+		# positioning ng agent para ma-match yung position ng Player
 		calculate_optimal_position()
 		var distance_to_target = global_position.distance_to(target_position)
 		
@@ -103,7 +105,7 @@ func _physics_process(delta):
 
 	move_and_slide()
 
-	# Only perform kicks during AI's turn
+	# kicks logic for AI during its turn
 	if turn_manager.is_ai_turn() and distance_to_sipa <= 60 and not is_kicking and kick_timer <= 0:
 		is_kicking = true
 		sfx_kick.play()
@@ -113,7 +115,7 @@ func _physics_process(delta):
 		var current_state = encode_state()
 		var action = q_learning_choose_action(current_state)
 		
-		# Enhanced decision logging
+		# printed output to see what's happening
 		print("\n--- DECISION #%d ---" % decision_count)
 		print("Current State: %s" % current_state)
 		print("Current Juggles: %d/%d (%.1f%% complete)" % [ai_juggles, turn_manager.required_juggles, (float(ai_juggles) / turn_manager.required_juggles) * 100])
@@ -153,7 +155,7 @@ func calculate_optimal_position():
 		target_position.x = predicted_sipa_pos.x
 		target_position.y = global_position.y  # maintain ground level
 	else:
-		# During player turn: position strategically between sipa and player
+		# During player turn, position yung sarili between sipa and player
 		# Calculate if AI can intercept the sipa before it hits ground
 		var time_to_ground = estimate_time_to_ground(sipa_pos, sipa_velocity)
 		var distance_ai_can_travel = SPEED * time_to_ground
@@ -170,13 +172,13 @@ func calculate_optimal_position():
 		target_position.y = global_position.y
 
 func estimate_time_to_ground(pos: Vector2, vel: Vector2) -> float:
-	# Simple physics calculation: time = (v + sqrt(v² + 2gh)) / g
+	# Physics calculation - time = (v + sqrt(v² + 2gh)) / g
 	var gravity = get_gravity().y
-	var ground_y = initial_position.y  # assuming ground level
+	var ground_y = initial_position.y  #eto yung floor
 	var height = ground_y - pos.y
 	
 	if height <= 0:
-		return 0.1  # already at ground level
+		return 0.1  # nasa floor
 	
 	var discriminant = vel.y * vel.y + 2 * gravity * height
 	if discriminant < 0:
@@ -218,11 +220,9 @@ func is_sipa_moving_away() -> bool:
 	var sipa_vel = sipa.linear_velocity
 	var current_distance = global_position.distance_to(sipa_pos)
 	
-	# Predict where sipa will be in 0.5 seconds
 	var future_sipa_pos = sipa_pos + sipa_vel * 0.5
 	var future_distance = global_position.distance_to(future_sipa_pos)
 	
-	# If sipa will be significantly farther away and moving with reasonable speed
 	return future_distance > current_distance + 30 and sipa_vel.length() > 100
 
 func perform_dribble():
@@ -243,7 +243,7 @@ func perform_dribble():
 		previous_state = current_state
 		previous_action = "kick"
 		
-		# Very gentle upward kick to keep sipa close
+		# For better dribbling mechanics ng AI (mas malapit sa sipa)
 		var small_horizontal = randf_range(-20, 20)
 		var impulse = Vector2(small_horizontal, -DRIBBLE_FORCE)
 		sipa.apply_central_impulse(impulse)
@@ -290,7 +290,7 @@ func perform_pass():
 		# Complete the turn after passing
 		complete_turn_with_reward()
 
-# --- ENHANCED STATE ENCODING ---
+# Encoding ng states sa q-table
 func encode_state() -> String:
 	if not sipa or not player:
 		return "default"
@@ -299,7 +299,6 @@ func encode_state() -> String:
 	var player_pos = player.global_position
 	var sipa_vel = sipa.linear_velocity
 	
-	# Discretize values for state representation
 	var dist_to_sipa = int(global_position.distance_to(sipa_pos) / 20)  # buckets of 20px
 	var dist_to_player = int(global_position.distance_to(player_pos) / 50)  # buckets of 50px
 	var sipa_speed = int(sipa_vel.length() / 100)  # velocity buckets
@@ -313,7 +312,7 @@ func encode_state() -> String:
 	
 	var juggle_progress = int(ai_juggles * 10.0 / turn_manager.required_juggles)  # progress as percentage
 	
-	# Create comprehensive state string
+	#state statistics
 	return "%d|%d|%d|%d|%d|%d|%d" % [
 		ai_juggles,
 		dist_to_sipa, 
@@ -332,18 +331,20 @@ func get_dynamic_epsilon() -> float:
 	var ai_lives = turn_manager.ai_lives
 	
 	# Become more unpredictable when player is losing (AI winning)
+	# Aggressive play
 	if player_lives < lives_threshold:
 		base_epsilon += aggression_bonus
 		print("  • Aggression mode: Player has %d lives, epsilon boosted by %.2f" % [player_lives, aggression_bonus])
 	
 	# Become more conservative when AI is losing
+	# Play safe
 	if ai_lives < lives_threshold:
 		base_epsilon *= 0.7
 		print("  • Conservative mode: AI has %d lives, epsilon reduced by 30%%" % ai_lives)
 	
-	return min(base_epsilon, 0.4)  # Cap at 40% to avoid being too random
+	return min(base_epsilon, 0.4)  # 40% randomness/unpredictability
 	
-# --- Q-LEARNING IMPLEMENTATION ---
+# Q-learning Implementation
 func q_learning_choose_action(state: String) -> String:
 	# Initialize state if not exists
 	if not q_table.has(state):
@@ -355,7 +356,7 @@ func q_learning_choose_action(state: String) -> String:
 	var dynamic_epsilon = get_dynamic_epsilon()  # Use dynamic epsilon instead of static
 	
 	if randf() < dynamic_epsilon:
-		# Exploration: choose random action with strategic bias
+		# exploration-choose random action but with strategy
 		var actions = ["kick", "kick", "kick", "pass"]  # 75% dribble, 25% pass
 		chosen_action = actions[randi() % actions.size()]
 		decision_type = "EXPLORATION"
@@ -364,7 +365,7 @@ func q_learning_choose_action(state: String) -> String:
 		chosen_action = "kick" if q_values["kick"] >= q_values["pass"] else "pass"
 		decision_type = "EXPLOITATION"
 	
-	# Enhanced decision logging
+	
 	print("Q-LEARNING DECISION:")
 	print("  • Method: %s (dynamic epsilon: %.3f vs base: %.3f)" % [decision_type, dynamic_epsilon, epsilon])
 	print("  • Game state: Player lives=%d, AI lives=%d" % [turn_manager.player_lives, turn_manager.ai_lives])
@@ -375,7 +376,7 @@ func q_learning_choose_action(state: String) -> String:
 	return chosen_action
 
 func update_q_value(state: String, action: String, reward: float, next_state: String):
-	# Initialize Q-table entries if they don't exist
+	# If walang laman q-table, then initialize muna
 	if not q_table.has(state):
 		q_table[state] = {"kick": 0.0, "pass": 0.0}
 	if not q_table.has(next_state):
@@ -402,7 +403,6 @@ func update_q_value(state: String, action: String, reward: float, next_state: St
 func calculate_reward(success: bool) -> float:
 	var base_reward = 1.0 if success else -5.0
 	
-	# Bonus rewards for strategic play
 	if success:
 		# Reward progress toward required juggles
 		var progress_bonus = (float(ai_juggles) / float(turn_manager.required_juggles)) * 2.0
@@ -414,7 +414,7 @@ func calculate_reward(success: bool) -> float:
 		var position_bonus = 0.0
 		if sipa:
 			var sipa_height = initial_position.y - sipa.global_position.y
-			if sipa_height > 50:  # Good height for juggling
+			if sipa_height > 60:  # Good height for juggling
 				position_bonus = 1.0
 		
 		var total_reward = base_reward + progress_bonus + efficiency_bonus + position_bonus
@@ -465,7 +465,7 @@ func complete_turn_with_reward():
 	
 	print("Episode %d completed successfully!\n" % total_episodes)
 
-# --- MINIMAX LOGIC (for comparison) ---
+# MINIMAX LOGIC for initial actions
 func minimax_decision(current_juggles, required_juggles, depth):
 	var kick_score = minimax(current_juggles + 1, required_juggles, depth - 1, false, "kick->")
 	var pass_score = minimax(required_juggles, required_juggles, depth - 1, false, "pass->")
@@ -474,9 +474,9 @@ func minimax_decision(current_juggles, required_juggles, depth):
 	print("  • Current situation: %d/%d juggles, depth %d" % [current_juggles, required_juggles, depth])
 	print("  • KICK score: %d | PASS score: %d" % [kick_score, pass_score])
 
-	# Add strategic consideration - prefer dribbling early, passing later
+	# prefer dribbling early, passing later
 	var juggle_ratio = float(current_juggles) / float(required_juggles)
-	if juggle_ratio < 0.7:  # Early in sequence, prefer dribbling
+	if juggle_ratio < 0.7:  # if onti pa juggle compared sa required, then focus more on dribbling
 		kick_score += 2
 		print("  • Early game bonus: KICK +2")
 	else:  # Late in sequence, consider passing
@@ -507,17 +507,15 @@ func minimax(current_juggles, required_juggles, depth, is_ai_turn, trace: String
 		print(trace + " [Player Turn 🧍] Forcing early pass → Score: -10")
 		return -10
 
-# --- HYBRID DECISION FUNCTION (Optional) ---
+# HYBRID DECISION FUNCTION
 func update_q_with_minimax(state: String, minimax_action: String) -> void:
 	if not q_table.has(state):
 		q_table[state] = {"kick": 0.0, "pass": 0.0}
 	
 	var current_q = q_table[state][minimax_action]
 	
-	# Dynamic reward based on game state
 	var reward = 5.0  # base reward
 	
-	# Bonus for strategic timing
 	var juggle_ratio = float(ai_juggles) / float(turn_manager.required_juggles)
 	if minimax_action == "kick" and juggle_ratio < 0.7:
 		reward += 3.0  # reward early dribbling
@@ -539,10 +537,10 @@ func decide_action() -> String:
 	# Get Minimax recommended action
 	var minimax_action = minimax_decision(ai_juggles, turn_manager.required_juggles, 3)
 
-	# Teach Q-learning with Minimax's suggestion
+	# Make minimax teach/suggest sa q-learning
 	update_q_with_minimax(state, minimax_action)
 
-	# Choose action from Q-learning policy
+	# choose action in q-learning
 	var final_action = q_learning_choose_action(state)
 	
 	print("FINAL DECISION: %s" % final_action.to_upper())

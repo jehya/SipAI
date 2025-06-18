@@ -7,6 +7,7 @@ var is_kicking = false
 var kick_timer = 0.0
 const KICK_DURATION = 0.3
 var initial_position: Vector2
+#ADDED
 
 @onready var sfx_kick: AudioStreamPlayer2D = $sfx_kick
 @onready var animated_sprite_2d: AnimatedSprite2D = $AnimatedSp
@@ -25,6 +26,7 @@ func disable_kick_collision():
 	collision_layer &= ~8  # Remove Layer 3 bit
 	
 func _physics_process(delta: float) -> void:
+
 	# Add the gravity.
 	if not is_on_floor():
 		velocity += get_gravity() * delta
